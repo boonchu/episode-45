@@ -150,6 +150,109 @@ web2 | success | rc=0 >>
  18:18:09 up  1:08,  1 user,  load average: 0.00, 0.01, 0.04
 ```
 
+## Second Playbook NTP
+
+```
+[vagrant@mgmt ~]$ ansible-playbook e45-ntp-install.yml
+
+PLAY [all] ********************************************************************
+
+TASK: [install ntp] ***********************************************************
+ok: [web1]
+ok: [lb]
+ok: [web2]
+
+TASK: [write our ntp.conf] ****************************************************
+ok: [web2]
+ok: [web1]
+ok: [lb]
+
+TASK: [start ntpd] ************************************************************
+ok: [web2]
+ok: [web1]
+ok: [lb]
+
+PLAY RECAP ********************************************************************
+lb                         : ok=3    changed=0    unreachable=0    failed=0
+web1                       : ok=3    changed=0    unreachable=0    failed=0
+web2                       : ok=3    changed=0    unreachable=0    failed=0
+
+[vagrant@mgmt ~]$ ansible all -a "/usr/sbin/ntpq -p" -u vagrant
+web1 | success | rc=0 >>
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*time-b.timefreq .ACTS.           1 u   10   64    3   38.729  -32.222  32.514
++100tx-f1-0.c720 216.218.192.202  2 u   10   64    3   21.660  -37.717  30.797
++time-c.nist.gov .ACTS.           1 u   12   64    3  151.892    1.395  21.770
++disorder.primat 204.123.2.72     2 u   14   64    3   14.823  -32.142  26.618
+-golem.canonical 193.79.237.14    2 u    9   64    3  153.666  -32.824  24.327
+
+web2 | success | rc=0 >>
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+-four10.gac.edu  18.26.4.105      2 u   44   64  377   61.699  -111.65  30.415
++vps3.cobryce.co 216.218.254.202  2 u   38   64  377   18.173  -72.699  17.997
+*216.152.240.220 164.67.62.194    2 u   41   64  377   21.148  -78.027  13.265
++ntp-sansome.moc 128.101.101.101  3 u   38   64  377   12.808  -108.22  29.377
++golem.canonical 193.79.237.14    2 u   40   64  377  162.687  -75.327  45.259
+
+lb | success | rc=0 >>
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
++pacific.latt.ne 44.24.199.34     3 u   28   64  377   28.342  -247.31 105.580
++resolver2.level 10.67.8.18       3 u   38   64  377   10.816  -248.85 106.958
++dragon506.start 17.253.34.253    2 u   42   64  375   62.149  -245.56 141.120
+*hydrogen.consta 200.98.196.212   2 u   40   64  377   88.204  -240.64 107.229
++juniperberry.ca 140.203.204.77   2 u   41   64  377  149.864  -242.36 104.856
+```
+
+## Third playbook : Remove NTP service
+
+```
+[vagrant@mgmt ~]$ ansible-playbook e45-ntp-remove.yml
+
+PLAY [all] ********************************************************************
+
+TASK: [remove ntp] ************************************************************
+changed: [lb]
+changed: [web2]
+changed: [web1]
+
+PLAY RECAP ********************************************************************
+lb                         : ok=1    changed=1    unreachable=0    failed=0
+web1                       : ok=1    changed=1    unreachable=0    failed=0
+web2                       : ok=1    changed=1    unreachable=0    failed=0
+```
+
+## Ansible facts
+
+```
+[vagrant@mgmt ~]$ ansible web1 -m setup
+
+[vagrant@mgmt ~]$ ansible all -m setup -a 'filter=ansible_product_name'
+web1 | success >> {
+    "ansible_facts": {
+        "ansible_product_name": "VirtualBox"
+    },
+    "changed": false
+}
+
+web2 | success >> {
+    "ansible_facts": {
+        "ansible_product_name": "VirtualBox"
+    },
+    "changed": false
+}
+
+lb | success >> {
+    "ansible_facts": {
+        "ansible_product_name": "VirtualBox"
+    },
+    "changed": false
+}
+
+```
+
 ## Note A: Vagrant User setup
 
   * It is nessessary for first time to run ping/pong and have 'ask-pass' with vagrant user
