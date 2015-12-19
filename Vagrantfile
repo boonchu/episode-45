@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
 
   # create some web servers
   # https://docs.vagrantup.com/v2/vagrantfile/tips.html
-  (1..2).each do |i|
+  (1..6).each do |i|
     config.vm.define "web#{i}" do |node|
         #node.vm.box = "ubuntu/trusty64"
         node.vm.box = "puppetlabs/centos-7.0-64-nocm"

@@ -8,7 +8,7 @@
   tasks:
 
   - name: install git
-    apt: name=git state=installed update_cache=yes
+    yum: name=git state=installed update_cache=yes
 
 # web
 - hosts: web
@@ -17,12 +17,24 @@
   tasks:
 
   - name: install nginx
-    apt: name=nginx state=installed
+    yum: name=nginx state=installed
+
+  - name: add group www-data
+    group: name=www-data state=present
+    notify: restart nginx
+
+  - name: add user www-data
+    user: name=www-data shell=/bin/nologin groups=www-data,root append=yes
+    notify: restart nginx
+
+  - name: make sites-available folder
+    file: path=/etc/nginx/sites-available state=directory owner=root group=root mode=0755
+    notify: restart nginx
 
   - name: write our nginx.conf
     template: src=templates/nginx.conf.j2 dest=/etc/nginx/nginx.conf
     notify: restart nginx
-
+  
   - name: write our /etc/nginx/sites-available/default
     template: src=templates/default-site.j2 dest=/etc/nginx/sites-available/default
     notify: restart nginx
@@ -42,10 +54,13 @@
   tasks:
 
   - name: install haproxy and socat
-    apt: pkg={{ item }} state=latest
+    yum: pkg={{ item }} state=latest
     with_items:
     - haproxy
     - socat
+
+  - name: make file /etc/default/haproxy
+    file: path=/etc/default/haproxy state=touch owner=root group=root mode=0640
 
   - name: enable haproxy
     lineinfile: dest=/etc/default/haproxy regexp="^ENABLED" line="ENABLED=1"

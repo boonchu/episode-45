@@ -36,10 +36,10 @@ defaults
 
 backend app
     {% for host in groups['lb'] %}
-       listen episode46 {{ hostvars[host]['ansible_eth0']['ipv4']['address'] }}:80
+       listen episode46 {{ hostvars[host]['ansible_enp0s3']['ipv4']['address'] }}:80
     {% endfor %}
     balance     roundrobin
     {% for host in groups['web'] %}
-        server {{ host }} {{ hostvars[host]['ansible_eth1']['ipv4']['address'] }} check port 80
+        server {{ host }} {{ hostvars[host]['ansible_enp0s8']['ipv4']['address'] }} check port 80
     {% endfor %}
 

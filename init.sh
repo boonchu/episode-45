@@ -23,3 +23,6 @@ cat << "holiday"
 
 holiday
 echo 'vagrant' | passwd --stdin vagrant
+echo 'installing epel 7'
+yum -y install epel-release
+yum clean all

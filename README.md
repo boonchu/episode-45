@@ -253,6 +253,53 @@ lb | success >> {
 
 ```
 
+## Adding web nodes
+
+```
+  * adding web3, web4, web5, web6
+[vagrant@mgmt ~]$ vim inventory.ini
+
+[vagrant@mgmt ~]$ ssh-keyscan web3 web4 web5 web6 >> ~/.ssh/known_hosts
+
+[vagrant@mgmt ~]$ ansible-playbook e45-ssh-addkey.yml --ask-pass
+SSH password:
+
+PLAY [all] ********************************************************************
+
+TASK: [install ssh key] *******************************************************
+ok: [web1]
+ok: [web2]
+ok: [lb]
+changed: [web3]
+changed: [web4]
+changed: [web5]
+changed: [web6]
+
+PLAY RECAP ********************************************************************
+lb                         : ok=1    changed=0    unreachable=0    failed=0
+web1                       : ok=1    changed=0    unreachable=0    failed=0
+web2                       : ok=1    changed=0    unreachable=0    failed=0
+web3                       : ok=1    changed=1    unreachable=0    failed=0
+web4                       : ok=1    changed=1    unreachable=0    failed=0
+web5                       : ok=1    changed=1    unreachable=0    failed=0
+web6                       : ok=1    changed=1    unreachable=0    failed=0
+
+[vagrant@mgmt ~]$ ansible-playbook e45-ntp-install.yml
+
+PLAY [all] ********************************************************************
+
+TASK: [install ntp] ***********************************************************
+ok: [web1]
+ok: [web2]
+ok: [lb]
+changed: [web3]
+changed: [web5]
+changed: [web4]
+changed: [web6]
+```
+
+## Fourth Playbook : NGINX web nodes
+
 ## Note A: Vagrant User setup
 
   * It is nessessary for first time to run ping/pong and have 'ask-pass' with vagrant user
