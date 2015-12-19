@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
 # install ansible (http://docs.ansible.com/intro_installation.html)
-apt-get -y install software-properties-common
-apt-add-repository -y ppa:ansible/ansible
-apt-get update
-apt-get -y install ansible
+#apt-get -y install software-properties-common
+#apt-add-repository -y ppa:ansible/ansible
+#apt-get update
+#apt-get -y install ansible
+
+rpm -iUvh http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-5.noarch.rpm
+yum clean all
+yum -y install ansible vim\* tmux
 
 # copy examples into /home/vagrant (from inside the mgmt node)
 cp -a /vagrant/examples/* /home/vagrant
