@@ -53,3 +53,5 @@ Host mgmt
 
   * posted in this chat 
     - http://stackoverflow.com/questions/23899028/ansible-failed-to-transfer-file-to
+  * how to setup ansible control-path in sftp
+    - http://docs.ansible.com/ansible/intro_configuration.html#control-path
