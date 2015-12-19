@@ -25,8 +25,9 @@ hello
 
 ## Note A: Vagrant User setup
 
-  * folk might be bumping into the issue with vagrant user
-    - https://github.com/puphpet/puphpet/issues/1253
+  * It is nessessary for first time to run ping/pong and have 'ask-pass' with vagrant user
+  * folk might be bumping into the issue with vagrant user - https://github.com/puphpet/puphpet/issues/1253
+  * I ended up using echo 'vagrant' | passwd --stdin vagrant to reset 'vagrant' user's password
 
 ```
 
@@ -47,3 +48,8 @@ Host mgmt
   LogLevel FATAL
 
 ```
+
+## Note B: Its much improving security when use sftp (if not, use flag to disable on ansible.cfg)
+
+  * posted in this chat 
+    - http://stackoverflow.com/questions/23899028/ansible-failed-to-transfer-file-to
